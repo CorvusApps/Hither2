@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loutEApanel"
@@ -10,5 +11,78 @@
     android:orientation="vertical"
     android:background="@drawable/catsplash">
 
+    <LinearLayout
+        android:layout_marginTop="@dimen/_150sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="@dimen/_10sdp"
+        >
 
-</LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoginGoogle"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="@dimen/_175sdp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Log in with Google"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/_10sdp"
+            app:cornerRadius="@dimen/_22sdp"
+            app:icon="@drawable/googlelogo"
+            app:iconGravity="start"
+            app:iconSize="@dimen/_20sdp"
+            android:gravity="fill_vertical"
+            app:iconTint="@null"
+
+
+
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoginFacebook"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="@dimen/_175sdp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Log in with Facebook"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/_10sdp"
+            app:cornerRadius="@dimen/_22sdp"
+            app:icon="@drawable/facebooklogo"
+            app:iconGravity="start"
+            app:iconSize="@dimen/_20sdp"
+            android:gravity="fill_vertical"
+
+            app:iconTint="@null"
+
+            />
+
+        <TextView
+            android:id="@+id/txtEmailLogin"
+            android:layout_width="@dimen/_175sdp"
+            android:layout_height="wrap_content"
+            android:text="Log in anonymously"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_25sdp"
+
+            />
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
