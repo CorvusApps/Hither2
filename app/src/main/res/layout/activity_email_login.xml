@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loutEmailLogin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EmailLogin">
+
+    <LinearLayout
+        android:layout_width="@dimen/_300sdp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_38sdp"
+            android:layout_marginRight="@dimen/_38sdp"
+            android:background="@color/colorPrimary"
+
+            android:hint="User Name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nextFocusForward="@+id/edtPassword"
+                android:inputType="textPersonName"
+                android:textColor="@color/colorPrimaryDark"
+                android:background="@color/colorPrimary"
+
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold"
+                android:maxLength="24"
+
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_38sdp"
+            android:layout_marginRight="@dimen/_38sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+
+            android:hint="Password">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nextFocusForward="@+id/edtPassword"
+                android:inputType="textPassword"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold"
+                android:background="@color/colorPrimary"
+
+
+                />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRegister"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_marginLeft="@dimen/_38sdp"
+                android:layout_gravity="left"
+                android:text="Register NEW  User"
+
+                android:textSize="@dimen/_13sdp"
+                android:textStyle="bold"
+                app:cornerRadius="@dimen/_20sdp"
+                android:backgroundTint="@color/colorPrimaryDark"
+
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogin"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_gravity="right"
+                android:text="Log in"
+
+                android:textSize="@dimen/_13sdp"
+                android:textStyle="bold"
+                app:cornerRadius="@dimen/_20sdp"
+                android:backgroundTint="@color/colorPrimaryDark"
+
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

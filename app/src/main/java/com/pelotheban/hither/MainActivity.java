@@ -79,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
         txtEmailLoginX.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(MainActivity.this, EmailLogin.class);
+                startActivity(intent);
+                finish();
 
             }
         });
