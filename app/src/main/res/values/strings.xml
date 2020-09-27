@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Hither</string>
+
+    <string name="facebook_app_id">366790377689111</string>
+    <string name="fb_login_protocol_scheme">fb366790377689111</string>
+
+
 </resources>
