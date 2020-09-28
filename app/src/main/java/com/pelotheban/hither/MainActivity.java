@@ -10,6 +10,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,13 +31,24 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
+    private int providerSelector; // 1 = google 2 = facebook 3 = email  4 = default
+
+    // Google
     private MaterialButton btnLoginGoogleX;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
 
+    //Email
     private TextView txtEmailLoginX;
+
+    //Facebook
+    private LoginButton btnActualFBLoginButtonX;
+    private MaterialButton btnLoginFacebookX;
+    private CallbackManager callbackManager;
 
     @Override
     public void onStart() {
@@ -53,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        providerSelector = 4;
+
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
@@ -63,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        //Google LOGIN
         creatGoogleLoginRequest();
 
         btnLoginGoogleX = findViewById(R.id.btnLoginGoogle);
@@ -70,15 +89,55 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                providerSelector = 1;
+
                 signIn();
 
             }
         });
 
+        //Facebook LOGIN
+
+        btnActualFBLoginButtonX = findViewById(R.id.btnActualFBLoginButton);
+        btnActualFBLoginButtonX.setReadPermissions(Arrays.asList("email", "public_profile"));
+
+        btnLoginFacebookX = findViewById(R.id.btnLoginFacebook);
+        btnLoginFacebookX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                providerSelector = 2;
+                btnActualFBLoginButtonX.performClick();
+
+            }
+        });
+
+        callbackManager = CallbackManager.Factory.create();
+        btnActualFBLoginButtonX.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
+
+        //Email LOGIN
+
         txtEmailLoginX = findViewById(R.id.txtEmailLogin);
         txtEmailLoginX.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                providerSelector = 3;
                 Intent intent = new Intent(MainActivity.this, EmailLogin.class);
                 startActivity(intent);
                 finish();
@@ -92,8 +151,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     //////////////////////// GOOGLE SIGN IN - START ///////////////////////////////////
+
+    // THE CALL BACK MANAGER IS FOR BOTH FACEBOOK AND GOOGLE
 
     private void creatGoogleLoginRequest() {
 
@@ -116,20 +176,28 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == 101) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
+        if (providerSelector == 1) {
 
-                firebaseAuthWithGoogle(account.getIdToken());
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+            if (requestCode == 101) {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                try {
+                    // Google Sign In was successful, authenticate with Firebase
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
 
-                // ...
+                    firebaseAuthWithGoogle(account.getIdToken());
+                } catch (ApiException e) {
+                    // Google Sign In failed, update UI appropriately
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    // ...
+                }
             }
+
+        } else if (providerSelector == 2){
+
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+
         }
     }
 
@@ -155,5 +223,5 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    //////////////////////// GOOGLE SIGN IN - START ///////////////////////////////////
+    //////////////////////// GOOGLE SIGN IN - END///////////////////////////////////
 }

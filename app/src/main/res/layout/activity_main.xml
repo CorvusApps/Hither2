@@ -69,6 +69,17 @@
 
             />
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/btnActualFBLoginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:text="Login with facebook"
+            android:layout_marginBottom="30dp"
+            android:visibility="gone"
+            />
+
         <TextView
             android:id="@+id/txtEmailLogin"
             android:layout_width="@dimen/_175sdp"
