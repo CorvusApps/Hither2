@@ -10,9 +10,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -25,6 +28,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -36,11 +41,12 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private int providerSelector; // 1 = google 2 = facebook 3 = email  4 = default
+    private FirebaseAuth mAuth;
 
     // Google
     private MaterialButton btnLoginGoogleX;
     private GoogleSignInClient mGoogleSignInClient;
-    private FirebaseAuth mAuth;
+
 
     //Email
     private TextView txtEmailLoginX;
@@ -98,8 +104,10 @@ public class MainActivity extends AppCompatActivity {
 
         //Facebook LOGIN
 
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
         btnActualFBLoginButtonX = findViewById(R.id.btnActualFBLoginButton);
-        btnActualFBLoginButtonX.setReadPermissions(Arrays.asList("email", "public_profile"));
+        btnActualFBLoginButtonX.setReadPermissions(Arrays.asList("email", "public_profile", "user_friends"));
 
         btnLoginFacebookX = findViewById(R.id.btnLoginFacebook);
         btnLoginFacebookX.setOnClickListener(new View.OnClickListener() {
@@ -117,15 +125,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
+                Log.i("FBL", "success");
+                handleFacebookToken(loginResult.getAccessToken());
+
             }
 
             @Override
             public void onCancel() {
+                Log.i("FBL", "cancel");
 
             }
 
             @Override
             public void onError(FacebookException error) {
+                Log.i("FBL", "onError " + error.toString());
 
             }
         });
@@ -224,4 +237,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //////////////////////// GOOGLE SIGN IN - END///////////////////////////////////
+
+    //////////////////////// FACEBOOK SIGN IN - BEGINNING /////////////////////////
+    //callback manager shared with Google above in googgle section
+
+    private void handleFacebookToken (AccessToken token) {
+        Log.i("FBL", "handle the token " + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if (task.isSuccessful()){
+
+                    Toast.makeText(MainActivity.this, "Logged on through Facebook", Toast.LENGTH_LONG).show();
+                    FirebaseUser user = mAuth.getCurrentUser();
+
+                    String userUID = FirebaseAuth.getInstance().getUid();
+
+                    DatabaseReference userLoginReference = FirebaseDatabase.getInstance().getReference().child("my_users").child(userUID);
+                    userLoginReference.getRef().child("user").setValue(userUID);
+
+                } else {
+
+                    Toast.makeText(MainActivity.this, "FAILED TO LOG IN THROUGH Facebook", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+
+    }
+
+
+    //////////////////////// FACEBOOK SIGN IN - END /////////////////////////
+
+
+
 }
