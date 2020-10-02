@@ -1,11 +1,13 @@
 package com.pelotheban.hither;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,7 +20,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class HomePage extends AppCompatActivity {
@@ -29,8 +33,11 @@ public class HomePage extends AppCompatActivity {
 
     private DatabaseReference homePageRef;
     private String userID;
+    private FirebaseAuth hpAuth;
 
-    Double lat, longit;
+    private Double lat, longit;
+
+    private Button btnLogoutX;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +46,19 @@ public class HomePage extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        btnLogoutX = findViewById(R.id.btnLogout);
+        btnLogoutX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Logout();
+
+            }
+        });
+
         userID = FirebaseAuth.getInstance().getUid();
         homePageRef = FirebaseDatabase.getInstance().getReference().child("my_users").child(userID);
+        hpAuth = FirebaseAuth.getInstance();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -65,6 +83,8 @@ public class HomePage extends AppCompatActivity {
 
                                 if (location != null) {
 
+                                    Log.i("LocFun", "success");
+
                                     lat = location.getLatitude();
                                     longit = location.getLongitude();
 
@@ -72,6 +92,11 @@ public class HomePage extends AppCompatActivity {
                                     homePageRef.getRef().child("lastlocation").setValue(location);
 
                                     calculateDistance();
+
+
+                                } else {
+
+                                    Log.i("LocFun", "null");
 
                                 }
 
@@ -105,6 +130,21 @@ public class HomePage extends AppCompatActivity {
         String distance2 = String.valueOf(distance);
         txtDistanceX.setText(distance2);
 
+
+    }
+
+    private void Logout() {
+
+        hpAuth.signOut();
+        LoginManager.getInstance().logOut();
+        transitionBackToLogin ();
+    }
+
+    private void transitionBackToLogin () {
+
+        Intent intent = new Intent(HomePage.this, MainActivity.class);
+        startActivity(intent);
+        finish();
 
     }
 

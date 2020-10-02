@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    card_view:cardCornerRadius="10dp"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardElevation="@dimen/_10sdp"
+
+    android:layout_marginTop="@dimen/_8sdp"
+    android:layout_marginBottom="@dimen/_8sdp"
+    android:layout_marginRight="@dimen/_10sdp"
+    android:layout_marginLeft="@dimen/_10sdp"
+    card_view:cardUseCompatPadding="false"
+    >
+
+    <LinearLayout
+        android:id="@+id/loutCoinMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        >
+
+        <ImageView
+            android:id="@+id/imgCardCoinAdd"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_150sdp"
+
+            android:src="@drawable/googlelogo"
+            android:layout_marginTop="0dp"
+
+            />
+
+
+        <LinearLayout
+            android:id="@+id/loutCoinFirstLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+
+
+            >
+
+            <TextView
+                android:id="@+id/txtCardPersonage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Septimius Severus"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textSize="@dimen/_15sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <TextView
+                android:id="@+id/txtCardDenomination"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_4sdp"
+                android:text="AE Sestertius"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textSize="@dimen/_15sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <TextView
+                android:id="@+id/txtCardMint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_12sdp"
+                android:text="Rome"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textSize="@dimen/_15sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/loutCoinSecondLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:visibility="visible"
+            >
+
+            <TextView
+                android:id="@+id/txtLabelRIC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RIC"
+                android:layout_marginRight="@dimen/_3sdp"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <TextView
+                android:id="@+id/txtCardRIC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="195"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <TextView
+                android:id="@+id/txtCardRICvar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="b"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <TextView
+                android:id="@+id/txtCardWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_30sdp"
+                android:text="999"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <TextView
+                android:id="@+id/txtLabelWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="g"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <TextView
+                android:id="@+id/txtCardDiameter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_12sdp"
+                android:text=""
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+
+                />
+
+            <TextView
+                android:id="@+id/txtLabelDiameter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mm"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/loutCoinObvDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:visibility="gone"
+            >
+
+
+            <TextView
+                android:id="@+id/txtObvDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="Laureate head right"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/loutCoinObvLeg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:visibility="gone"
+            >
+
+
+            <TextView
+                android:id="@+id/txtObvLeg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="IMP.CAES.VESP.COS.III"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/loutCoinRevDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            >
+
+
+            <TextView
+                android:id="@+id/txtRevDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="12"
+
+                android:text="Concordia seated left; patera in right hand; cornucopia in left hand"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="1"
+                android:gravity="right">
+
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/loutCoinRevLeg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:visibility="gone"
+            >
+
+
+            <TextView
+                android:id="@+id/txtRevLeg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="COS.III"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/loutCoinProvenance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:visibility="gone"
+            >
+
+
+            <TextView
+                android:id="@+id/txtProvenance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"
+                android:layout_weight="4"
+
+                android:text="CNG Coin Shop (June 2012) bought on a sunny day in fucking agusut"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <TextView
+                android:id="@+id/txtLabelValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:textStyle="italic"
+                android:text="$"
+
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+
+                />
+
+            <TextView
+                android:id="@+id/txtValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"
+                android:layout_weight="1"
+                android:text="2,450"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/loutCoinNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:id="@+id/txtNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"
+
+                android:text="Lustrous and well struck"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:visibility="visible"
+            >
+
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/_10sdp"
+            android:layout_height="@dimen/_10sdp"
+
+            android:layout_gravity="left"
+            android:foregroundGravity="left"
+            android:visibility="gone"
+            app:srcCompat="@drawable/facebooklogo" />
+
+
+        <TextView
+            android:id="@+id/txtCardCoinUid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/txtCardImgLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/txtCardValueUnformatted"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/txtCardSortRIC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/txtCardReplicateBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+
+            android:text="Replicate coin"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+
+</com.google.android.material.card.MaterialCardView>
