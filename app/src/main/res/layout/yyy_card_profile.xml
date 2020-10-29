@@ -48,7 +48,7 @@
             >
 
             <TextView
-                android:id="@+id/txtCardPersonage"
+                android:id="@+id/txtCardProfileName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Septimius Severus"
@@ -59,7 +59,7 @@
                 />
 
             <TextView
-                android:id="@+id/txtCardDenomination"
+                android:id="@+id/txtCardLatitude"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_4sdp"
@@ -71,7 +71,7 @@
                 />
 
             <TextView
-                android:id="@+id/txtCardMint"
+                android:id="@+id/txtCardLongitude"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_12sdp"
