@@ -12,10 +12,12 @@
         <activity
             android:name=".Profile"
             android:label="@string/title_activity_profile"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Hotspot"
             android:label="@string/title_activity_hotspot"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MenuPage"
