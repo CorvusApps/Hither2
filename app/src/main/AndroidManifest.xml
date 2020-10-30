@@ -62,7 +62,7 @@
             android:value="@string/facebook_app_id" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
