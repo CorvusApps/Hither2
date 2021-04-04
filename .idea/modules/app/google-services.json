@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "749718438336",
+    "firebase_url": "https://hither-2f2e0.firebaseio.com",
+    "project_id": "hither-2f2e0",
+    "storage_bucket": "hither-2f2e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749718438336:android:450fd716a34bcea2b64825",
+        "android_client_info": {
+          "package_name": "com.pelotheban.hither"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "749718438336-vr3g18j2m65iral891bgo8fta15fqlon.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pelotheban.hither",
+            "certificate_hash": "cf84311f3088a64fbe77ee015be778c45866270a"
+          }
+        },
+        {
+          "client_id": "749718438336-t656tafqt4tvn7opia89s3g4ld9mtgeo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjS6q7A6982413DkSrKp3Zc8k-0zNlPSY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "749718438336-t656tafqt4tvn7opia89s3g4ld9mtgeo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

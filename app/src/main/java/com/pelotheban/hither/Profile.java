@@ -1,6 +1,7 @@
 package com.pelotheban.hither;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,11 +23,13 @@ import androidx.core.app.ActivityCompat;
 
 import android.provider.MediaStore;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -36,22 +39,14 @@ public class Profile extends AppCompatActivity implements View.OnFocusChangeList
     private EditText edtNameX, edtHitherX;
     private Bitmap profileImageBitmap;
 
+    private TextView txtNameX, txtHitherX;
+    private FloatingActionButton fabEditX, fabSaveX;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         imgProfileImageX = findViewById(R.id.imgProfileImage);
 
@@ -65,9 +60,44 @@ public class Profile extends AppCompatActivity implements View.OnFocusChangeList
         edtNameX.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         edtNameX.setRawInputType(InputType.TYPE_CLASS_TEXT);
 
+        txtNameX = findViewById(R.id.txtNameB);
+        txtHitherX = findViewById(R.id.txtHitherB);
+
+        fabEditX = findViewById(R.id.fabEdit);
+        fabEditX.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onClick(View view) {
+                fabEditX.setVisibility(View.GONE);
+                fabSaveX.setVisibility(View.VISIBLE);
+                txtNameX.setVisibility(View.GONE);
+                txtHitherX.setVisibility(View.GONE);
+                edtNameX.setVisibility(View.VISIBLE);
+                edtHitherX.setVisibility(View.VISIBLE);
+                Log.i("IFTEST" , "in edit click");
+
+            }
+        });
+
+        fabSaveX = findViewById(R.id.fabSave);
+        fabSaveX.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onClick(View view) {
+                fabEditX.setVisibility(View.VISIBLE);
+                fabSaveX.setVisibility(View.GONE);
+                txtNameX.setVisibility(View.VISIBLE);
+                txtHitherX.setVisibility(View.VISIBLE);
+                edtNameX.setVisibility(View.GONE);
+                edtHitherX.setVisibility(View.GONE);
+            }
+        });
+
         imgProfileImageX.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Log.i("IFTEST" , "in image click");
 
                 if(ActivityCompat.checkSelfPermission(Profile.this,
                         Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
