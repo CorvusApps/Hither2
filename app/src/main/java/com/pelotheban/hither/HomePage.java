@@ -66,6 +66,8 @@ public class HomePage extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
     private Query sortProfiles;
 
+    // for git
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
