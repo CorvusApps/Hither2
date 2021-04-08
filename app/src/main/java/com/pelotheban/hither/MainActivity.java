@@ -229,6 +229,13 @@ public class MainActivity extends AppCompatActivity {
 
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(MainActivity.this, "Logged on through Google", Toast.LENGTH_LONG).show();
+
+                            String userUID = FirebaseAuth.getInstance().getUid();
+                            Log.i("GoogleSign", userUID);
+                            DatabaseReference userLoginReference = FirebaseDatabase.getInstance().getReference().child("my_users").child(userUID);
+                            Log.i("GoogleSign", userLoginReference.toString());
+                            userLoginReference.getRef().child("user").setValue(userUID);
+
                             Intent intent = new Intent(MainActivity.this, MenuPage.class);
                             startActivity(intent);
                             finish();

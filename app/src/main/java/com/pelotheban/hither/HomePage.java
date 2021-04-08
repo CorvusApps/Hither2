@@ -66,7 +66,7 @@ public class HomePage extends AppCompatActivity {
     private LocationCallback locationCallback;
 
 
-    private DatabaseReference homePageRef;
+    private DatabaseReference homePageRef, userHomePageRef;
     private String userID;
     private FirebaseAuth hpAuth;
 
@@ -125,7 +125,9 @@ public class HomePage extends AppCompatActivity {
                        longit = location.getLongitude();
 
                        txtUserLocationX.setText("Lat: " + lat + "  Long: " + longit);
-                       homePageRef.getRef().child("lastlocation").setValue(location);
+                       userHomePageRef = FirebaseDatabase.getInstance().getReference().child("my_users").child(userID);
+                       //homePageRef.getRef().child("lastlocation").setValue(location); // this just created a last location not linked to a user
+                       userHomePageRef.getRef().child("lastlocation").setValue(location);
 
                        calculateDistance();
 
@@ -151,6 +153,7 @@ public class HomePage extends AppCompatActivity {
 
         userID = FirebaseAuth.getInstance().getUid();
         homePageRef = FirebaseDatabase.getInstance().getReference().child("my_users");
+
         hpAuth = FirebaseAuth.getInstance();
         homePageRef.keepSynced(true);
 
@@ -192,7 +195,9 @@ public class HomePage extends AppCompatActivity {
                                     longit = location.getLongitude();
 
                                     txtUserLocationX.setText("Lat: " + lat + "  Long: " + longit);
-                                    homePageRef.getRef().child("lastlocation").setValue(location);
+                                    userHomePageRef = FirebaseDatabase.getInstance().getReference().child("my_users").child(userID);
+                                    //homePageRef.getRef().child("lastlocation").setValue(location); // this just created a last location not linked to a user
+                                    userHomePageRef.getRef().child("lastlocation").setValue(location);
 
                                     calculateDistance();
 
@@ -574,7 +579,9 @@ public class HomePage extends AppCompatActivity {
                                longit = location.getLongitude();
 
                                txtUserLocationX.setText("Lat: " + lat + "  Long: " + longit);
-                               homePageRef.getRef().child("lastlocation").setValue(location);
+                               userHomePageRef = FirebaseDatabase.getInstance().getReference().child("my_users").child(userID);
+                               //homePageRef.getRef().child("lastlocation").setValue(location); // this just created a last location not linked to a user
+                               userHomePageRef.getRef().child("lastlocation").setValue(location);
 
                                calculateDistance();
 
