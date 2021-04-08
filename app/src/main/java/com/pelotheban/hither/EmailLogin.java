@@ -272,9 +272,9 @@ public class EmailLogin extends AppCompatActivity {
 
     private void transitionToHome(){
 
-//        Intent intent = new Intent(EmailLogin.this, HomePage.class);
-//        startActivity(intent);
-//        Log.i("HPSTARTS", "Email intent");
+        Intent intent = new Intent(EmailLogin.this, HomePage.class);
+        startActivity(intent);
+        Log.i("HPSTARTS", "Email intent");
 
 
     }

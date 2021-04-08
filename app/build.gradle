@@ -51,7 +51,7 @@ dependencies {
    // implementation 'com.google.android.material:material:1.2.1'
 
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     implementation 'com.facebook.android:facebook-android-sdk:5.0.3'
 

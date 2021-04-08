@@ -3,6 +3,7 @@ package com.pelotheban.hither;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
@@ -14,9 +15,18 @@ import android.os.Bundle;
 
 import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,11 +37,13 @@ import com.google.firebase.database.Query;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +62,9 @@ public class HomePage extends AppCompatActivity {
     private TextView txtUserLocationX, txtDistanceX;
     private FloatingActionButton fab;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationRequest locationRequest; // this and callback needed for when location is null because no app generated a last location
+    private LocationCallback locationCallback;
+
 
     private DatabaseReference homePageRef;
     private String userID;
@@ -67,14 +82,14 @@ public class HomePage extends AppCompatActivity {
     private Query sortProfiles;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Log.i("LocFun", "log check");
 
         btnLogoutX = findViewById(R.id.btnLogout);
         btnLogoutX.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +100,52 @@ public class HomePage extends AppCompatActivity {
 
             }
         });
+
+        //////////////////// LOCATION CALLBACK /////////////////////////////////
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(4000);
+        locationRequest.setFastestInterval(2000);
+
+        locationCallback = new LocationCallback() {
+
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+
+                Log.i("LocFun", " in location callback");
+
+                if (locationResult != null) {
+
+                    Log.i("LocFun", " last location success 3");
+
+                   for (Location location: locationResult.getLocations()) {
+
+                       lat = location.getLatitude();
+                       longit = location.getLongitude();
+
+                       txtUserLocationX.setText("Lat: " + lat + "  Long: " + longit);
+                       homePageRef.getRef().child("lastlocation").setValue(location);
+
+                       calculateDistance();
+
+                   }
+
+
+                } else {
+
+                    Log.i("LocFun", "location result null ");
+
+                    //TBD what to do with this
+                }
+
+
+
+            }
+        };
+
+
+        ////////////////// end location callback ////////////////////////////////////
 
         //////////////////// FIREBASE BASICS /////////////////////////////////////
 
@@ -105,20 +166,27 @@ public class HomePage extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i("LocFun", "button press");
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                     if (getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
+                        Log.i("LocFun", "Already has peremission 1");
 
-                        // get location
-                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+
+                       // getLastLocation();
+
+                        // get last location if available
+                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(HomePage.this, new OnSuccessListener<Location>() {
                             @Override
                             public void onSuccess(Location location) {
 
+
+
                                 if (location != null) {
 
-                                    Log.i("LocFun", "success");
+                                    Log.i("LocFun", " last location success 1");
 
                                     lat = location.getLatitude();
                                     longit = location.getLongitude();
@@ -131,7 +199,13 @@ public class HomePage extends AppCompatActivity {
 
                                 } else {
 
-                                    Log.i("LocFun", "null");
+                                    Log.i("LocFun", "last location null 1");
+
+
+
+                                    checkSettingsAndStartLocationUpdates();
+
+
 
                                 }
 
@@ -140,7 +214,11 @@ public class HomePage extends AppCompatActivity {
 
                     } else {
 
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+                        Log.i("LocFun", "need permission");
+                        // go to request permission which applies to last location only
+
+                        askLocationPermission();
+
 
                     }
 
@@ -222,6 +300,14 @@ public class HomePage extends AppCompatActivity {
 
 
     } ////////////////////// END OF ON CREATE ///////////////////////////////////////////////////////////////////////////
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+
+        stopLocationUpdates();
+    }
 
     //////////////////////// START ------> RECYCLER VIEW COMPONENTS /////////////////////////////////////////////////////
     /////////////////// includes: viewholder, sort, expoloding card view dialog, functions from dialog //////////////////
@@ -344,5 +430,203 @@ public class HomePage extends AppCompatActivity {
         finish();
 
     }
+
+    private void checkSettingsAndStartLocationUpdates() {
+
+        Log.i("LocFun", "in check settings");
+
+        LocationSettingsRequest request = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build();
+        SettingsClient client= LocationServices.getSettingsClient(this);
+
+        Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings(request);
+        locationSettingsResponseTask.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+
+                startLocationUpdates();
+
+            }
+        });
+
+        locationSettingsResponseTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                if (e instanceof ResolvableApiException) {
+
+                    ResolvableApiException apiException = (ResolvableApiException) e;
+                    try {
+                        apiException.startResolutionForResult(HomePage.this, 1001);
+                    } catch (IntentSender.SendIntentException sendIntentException) {
+                        sendIntentException.printStackTrace();
+                    }
+                }
+
+                // ask user to change setting
+
+            }
+        });
+
+
+    }
+
+    private void startLocationUpdates() {
+
+        Log.i("LocFun", "in start location updates");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+
+                Log.i("LocFun", "location already granted 2 ");
+
+                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+                // need to actually build in
+
+            } else {
+
+                Log.i("LocFun", "somehow no permission in startlocation updates");
+
+            //This should never happen beecause it goes through permission before it gets here... but just in case
+
+                askLocationPermissionX();
+
+            }
+        }
+    }
+
+    private void stopLocationUpdates() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+
+
+    }
+
+    // ask permission for the use last location
+    private void askLocationPermission() {
+
+        Log.i("LocFun", "in askLocationPermission");
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+
+            Log.i("LocFun", "show permission rationale");
+
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+
+        } else {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+
+            Log.i("LocFun", "actually asking for permission for last location");
+
+        }
+
+
+    }
+
+    // ask permission for ongoing location checking
+    private void askLocationPermissionX() {
+
+        Log.i("LocFun", "inaskLocationPermissionX");
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+
+            Log.i("LocFun", "show permission rationale");
+
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 102);
+
+        } else {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 102);
+
+            Log.i("LocFun", "actually asking for permission for last location");
+
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == 101) {
+            Log.i("LocFun", "in request 101");
+           if ( grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+               Log.i("LocFun", "101 granted");
+
+               // Permission granted for last locations
+               // but for some reason have to ask for it again here
+
+               if (getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                       == PackageManager.PERMISSION_GRANTED) {
+
+
+                   // get location
+                   fusedLocationProviderClient.getLastLocation().addOnSuccessListener(HomePage.this, new OnSuccessListener<Location>() {
+                       @Override
+                       public void onSuccess(Location location) {
+
+                           Log.i("LocFun", "getting location 2");
+
+                           if (location != null) {
+
+                               Log.i("LocFun", "success");
+
+                               lat = location.getLatitude();
+                               longit = location.getLongitude();
+
+                               txtUserLocationX.setText("Lat: " + lat + "  Long: " + longit);
+                               homePageRef.getRef().child("lastlocation").setValue(location);
+
+                               calculateDistance();
+
+
+                           } else {
+
+                               checkSettingsAndStartLocationUpdates();
+
+                               Log.i("LocFun", "sending to checksettings 2");
+                           }
+                       }
+                   });
+
+               }
+
+
+
+
+           }   else {
+
+               //Permission not granted - some dialog box
+
+           }
+
+
+        }
+        // get permission for ongoing location check
+        if (requestCode == 102) {
+            if ( grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+                // Permission granted
+
+                Log.i("LocFun", "in 102 - sending to checksettings");
+
+                checkSettingsAndStartLocationUpdates();
+
+
+            }   else {
+
+                //Permission not granted - some dialog box
+
+            }
+
+
+        }
+
+
+
+    }
+
+
+
+
 
 }
