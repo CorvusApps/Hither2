@@ -1,6 +1,7 @@
 package com.pelotheban.hither;
 
 import android.Manifest;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -35,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -43,6 +45,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -57,7 +60,7 @@ import java.util.Locale;
 
 
 
-public class HomePage extends AppCompatActivity {
+public class HomePage extends AppCompatActivity implements View.OnClickListener {
 
     private TextView txtUserLocationX, txtDistanceX;
     private FloatingActionButton fab;
@@ -72,7 +75,7 @@ public class HomePage extends AppCompatActivity {
 
     private double lat, longit;
 
-    private Button btnLogoutX;
+    private Button btnLogoutX, btnStartLocationServiceX, btnStopLocationServiceX;
 
     // recycler view elements
 
@@ -165,6 +168,25 @@ public class HomePage extends AppCompatActivity {
         txtUserLocationX = findViewById(R.id.txtUserLocation);
         txtDistanceX = findViewById(R.id.txtDistance);
 
+        btnStartLocationServiceX = findViewById(R.id.btnStartLocService);
+        btnStartLocationServiceX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startService(new Intent(HomePage.this,  JClocationService.class));
+            }
+        });
+
+        btnStopLocationServiceX = findViewById(R.id.btnStopLocService);
+        btnStopLocationServiceX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                stopService(new Intent(HomePage.this, JClocationService.class));
+
+            }
+        });
+
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,34 +199,31 @@ public class HomePage extends AppCompatActivity {
                     == PackageManager.PERMISSION_GRANTED) {
                         Log.i("LocFun", "Already has peremission 1");
 
+                        // get last location if available MOTHBOLLING LAST LOCATION functionality but keeping as // for now
+//                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(HomePage.this, new OnSuccessListener<Location>() {
+//                            @Override
+//                            public void onSuccess(Location location) {
+//
+//
+//
+//                                if (location != null) {
+//
+//                                    Log.i("LocFun", " last location success 1");
+//
+//                                    lat = location.getLatitude();
+//                                    longit = location.getLongitude();
+//
+//                                    txtUserLocationX.setText("Lat: " + lat + "  Long: " + longit);
+//                                    userHomePageRef = FirebaseDatabase.getInstance().getReference().child("my_users").child(userID);
+//                                    //homePageRef.getRef().child("lastlocation").setValue(location); // this just created a last location not linked to a user
+//                                    userHomePageRef.getRef().child("lastlocation").setValue(location);
+//
+//                                    calculateDistance();
 
-                       // getLastLocation();
-
-                        // get last location if available
-                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(HomePage.this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-
-
-
-                                if (location != null) {
-
-                                    Log.i("LocFun", " last location success 1");
-
-                                    lat = location.getLatitude();
-                                    longit = location.getLongitude();
-
-                                    txtUserLocationX.setText("Lat: " + lat + "  Long: " + longit);
-                                    userHomePageRef = FirebaseDatabase.getInstance().getReference().child("my_users").child(userID);
-                                    //homePageRef.getRef().child("lastlocation").setValue(location); // this just created a last location not linked to a user
-                                    userHomePageRef.getRef().child("lastlocation").setValue(location);
-
-                                    calculateDistance();
-
-
-                                } else {
-
-                                    Log.i("LocFun", "last location null 1");
+//
+//                                } else {
+//
+//                                    Log.i("LocFun", "last location null 1");
 
 
 
@@ -212,20 +231,24 @@ public class HomePage extends AppCompatActivity {
 
 
 
-                                }
+                               // }
 
-                            }
-                        });
+                           // }
+                       // });
 
                     } else {
 
                         Log.i("LocFun", "need permission");
                         // go to request permission which applies to last location only
 
-                        askLocationPermission();
+                        askLocationPermissionX();
 
 
                     }
+
+                } else {
+                    // this else means earlier veresion of Android no need to check permissions
+                    checkSettingsAndStartLocationUpdates();
 
                 }
 
@@ -313,6 +336,25 @@ public class HomePage extends AppCompatActivity {
 
         stopLocationUpdates();
     }
+
+    // when the onClics were in onCreate this code was throwing error likely related to the context this and view did not work
+//    @Override
+//    public void onClick(View view) {
+//
+//        if (view == btnStartLocationServiceX) {
+//
+//            startService(new Intent(this,  JClocationService.class));
+//        }
+//
+//        if (view == btnStopLocationServiceX) {
+//
+//            stopService(new Intent(this,  JClocationService.class));
+//        }
+//
+//
+//
+//    }
+
 
     //////////////////////// START ------> RECYCLER VIEW COMPONENTS /////////////////////////////////////////////////////
     /////////////////// includes: viewholder, sort, expoloding card view dialog, functions from dialog //////////////////
@@ -507,7 +549,7 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-    // ask permission for the use last location
+    // ask permission for the use last location // the call to this method is mothballed as only using contiuous
     private void askLocationPermission() {
 
         Log.i("LocFun", "in askLocationPermission");

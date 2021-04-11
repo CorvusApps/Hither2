@@ -235,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
                             DatabaseReference userLoginReference = FirebaseDatabase.getInstance().getReference().child("my_users").child(userUID);
                             Log.i("GoogleSign", userLoginReference.toString());
                             userLoginReference.getRef().child("user").setValue(userUID);
+                            userLoginReference.getRef().child("profilename").setValue("HitherCat");
 
                             Intent intent = new Intent(MainActivity.this, MenuPage.class);
                             startActivity(intent);
