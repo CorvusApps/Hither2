@@ -60,7 +60,7 @@ import java.util.Locale;
 
 
 
-public class HomePage extends AppCompatActivity implements View.OnClickListener {
+public class HomePage extends AppCompatActivity {
 
     private TextView txtUserLocationX, txtDistanceX;
     private FloatingActionButton fab;
@@ -75,7 +75,7 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
 
     private double lat, longit;
 
-    private Button btnLogoutX, btnStartLocationServiceX, btnStopLocationServiceX;
+    private Button btnLogoutX, btnStartLocationServiceX, btnStopLocationServiceX, btnStartLocationService2X, btnStopLocationService2X;
 
     // recycler view elements
 
@@ -168,10 +168,14 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         txtUserLocationX = findViewById(R.id.txtUserLocation);
         txtDistanceX = findViewById(R.id.txtDistance);
 
+
+        //////////////////////////// FIRST TRY AT SERVICE BUTTONS START ///////////////////////////////
         btnStartLocationServiceX = findViewById(R.id.btnStartLocService);
         btnStartLocationServiceX.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Log.i("Classes", "Start location service button click");
 
                 startService(new Intent(HomePage.this,  JClocationService.class));
             }
@@ -186,6 +190,30 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
 
             }
         });
+
+        //////////////////////////// FIRST TRY AT SERVICE BUTTONS End ///////////////////////////////
+
+        //////////////////////////// SECOND TRY AT SERVICE BUTTONS START ///////////////////////////////
+        btnStartLocationService2X = findViewById(R.id.btnStartLocService2);
+        btnStartLocationService2X.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        btnStopLocationService2X = findViewById(R.id.btnStopLocService2);
+        btnStopLocationService2X.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+
+
+        //////////////////////////// FIRST TRY AT SERVICE BUTTONS end ///////////////////////////////
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -337,23 +365,6 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         stopLocationUpdates();
     }
 
-    // when the onClics were in onCreate this code was throwing error likely related to the context this and view did not work
-//    @Override
-//    public void onClick(View view) {
-//
-//        if (view == btnStartLocationServiceX) {
-//
-//            startService(new Intent(this,  JClocationService.class));
-//        }
-//
-//        if (view == btnStopLocationServiceX) {
-//
-//            stopService(new Intent(this,  JClocationService.class));
-//        }
-//
-//
-//
-//    }
 
 
     //////////////////////// START ------> RECYCLER VIEW COMPONENTS /////////////////////////////////////////////////////
