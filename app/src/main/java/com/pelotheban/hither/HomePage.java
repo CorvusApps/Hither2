@@ -1,6 +1,7 @@
 package com.pelotheban.hither;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -47,6 +49,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +59,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -68,6 +73,8 @@ public class HomePage extends AppCompatActivity {
     private LocationRequest locationRequest; // this and callback needed for when location is null because no app generated a last location
     private LocationCallback locationCallback;
 
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    private static final int IGNORE_BATTERY_OPTIMIZATION_REQUEST = 1002;
 
     private DatabaseReference homePageRef, userHomePageRef;
     private String userID;
@@ -93,6 +100,7 @@ public class HomePage extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Log.i("LocFun", "log check");
+        Log.i("LocNewApproach", "log check 2");
 
         btnLogoutX = findViewById(R.id.btnLogout);
         btnLogoutX.setOnClickListener(new View.OnClickListener() {
@@ -194,10 +202,33 @@ public class HomePage extends AppCompatActivity {
         //////////////////////////// FIRST TRY AT SERVICE BUTTONS End ///////////////////////////////
 
         //////////////////////////// SECOND TRY AT SERVICE BUTTONS START ///////////////////////////////
+
+
         btnStartLocationService2X = findViewById(R.id.btnStartLocService2);
         btnStartLocationService2X.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+
+                Log.i("LocNewApproach", "btnStartLocationService2");
+
+                if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(HomePage.this,
+                            new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                            REQUEST_CODE_LOCATION_PERMISSION);
+
+                   // Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+
+
+                    Log.i("LocNewApproach", "needs to ask for permission");
+
+                } else {
+
+                    Log.i("LocNewApproach", "permission already granted");
+
+                    startLocationService2();
+
+                }
 
             }
         });
@@ -205,7 +236,11 @@ public class HomePage extends AppCompatActivity {
         btnStopLocationService2X = findViewById(R.id.btnStopLocService2);
         btnStopLocationService2X.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+
+                Log.i("LocNewApproach", "stopLocationService2 clicked");
+
+                stopLocationService2();
 
             }
         });
@@ -356,6 +391,71 @@ public class HomePage extends AppCompatActivity {
 
 
     } ////////////////////// END OF ON CREATE ///////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////START of location service 2 approach //////////////////////////////////////////////////
+
+    private boolean isLocationServiceRunning() {
+        Log.i("LocNewApproach", "isLocationServiceRunning");
+
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if(activityManager != null) {
+            for (ActivityManager.RunningServiceInfo service:
+            activityManager.getRunningServices(Integer.MAX_VALUE)){
+                if(JClocationService2.class.getName().equals(service.service.getClassName())) {
+                    if(service.foreground){
+                        return true;
+                    }
+                }
+
+            }
+            return false;
+        }
+        return false;
+    }
+
+    private void startLocationService2() {
+
+        Log.i("LocNewApproach", "startLocationService2");
+
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (pm != null && !pm.isIgnoringBatteryOptimizations(getPackageName())) {
+                askIgnoreOptimization();
+            }
+
+        }
+
+        if(!isLocationServiceRunning()) {
+            Log.i("LocNewApproach", "isLocationServiceRunning = true and we're in the if");
+
+            Intent intent = new Intent(getApplicationContext(), JClocationService2.class);
+            intent.setAction(JCconstants.ACTION_START_LOCATION_SERVICE);
+            startService(intent);
+        }
+    }
+
+    private void stopLocationService2() {
+        Log.i("LocNewApproach", "stopLocationService2");
+
+
+        if (isLocationServiceRunning()){
+            Log.i("LocNewApproach", "in stop loc 2 in if isLocationServiceRunning");
+
+            Intent intent = new Intent(getApplicationContext(), JClocationService2.class);
+            intent.setAction(JCconstants.ACTION_STOP_LOCATION_SERVICE);
+            startService(intent);
+        } else {
+            Log.i("LocNewApproach", "in stop loc 2 in if isLocationServiceRunning is false but going to stop anyway");
+
+            Intent intent = new Intent(getApplicationContext(), JClocationService2.class);
+            intent.setAction(JCconstants.ACTION_STOP_LOCATION_SERVICE);
+            startService(intent);
+
+        }
+
+    }
+
+    ////////////////////////////END of location service 2 approach //////////////////////////////////////////////////
 
     @Override
     protected void onStop() {
@@ -604,6 +704,7 @@ public class HomePage extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
+
         if (requestCode == 101) {
             Log.i("LocFun", "in request 101");
            if ( grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
@@ -681,7 +782,33 @@ public class HomePage extends AppCompatActivity {
 
         }
 
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length >0) {
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                Log.i("LocNewApproach", "manual permission granted");
+
+                startLocationService2();
+            } else {
+
+                // need a dialog to tell them to do this
+                Log.i("LocNewApproach", "manual permission ont granted");
+
+
+            }
+        }
+
+
+
+    }
+    private void askIgnoreOptimization() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            Intent intentBat = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intentBat.setData(Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intentBat, IGNORE_BATTERY_OPTIMIZATION_REQUEST);
+        }
+        //probably don't need an else as we only get here if we need to and asynch should be moving us along anyway
 
     }
 
