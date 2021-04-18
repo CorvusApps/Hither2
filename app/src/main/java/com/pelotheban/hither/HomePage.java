@@ -2,7 +2,9 @@ package com.pelotheban.hither;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.app.Service;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -10,7 +12,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -39,6 +43,7 @@ import com.google.firebase.database.Query;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -52,6 +57,8 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -84,6 +91,16 @@ public class HomePage extends AppCompatActivity {
 
     private Button btnLogoutX, btnStartLocationServiceX, btnStopLocationServiceX, btnStartLocationService2X, btnStopLocationService2X;
 
+
+
+    //Permission dialog
+
+    private Button btnOKX, btnNoX;
+    private int height2;
+    private int width2;
+    private AlertDialog dialog;
+
+
     // recycler view elements
 
     private RecyclerView rcvProfilesX;
@@ -101,6 +118,17 @@ public class HomePage extends AppCompatActivity {
 
         Log.i("LocFun", "log check");
         Log.i("LocNewApproach", "log check 2");
+
+        /// sizing the display to have both the question and then the answer mostly in the center
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        double height = size.y;
+
+        height2 = (int) Math.round(height);
+        width2 = (int) Math.round(width);
 
         btnLogoutX = findViewById(R.id.btnLogout);
         btnLogoutX.setOnClickListener(new View.OnClickListener() {
@@ -178,26 +206,26 @@ public class HomePage extends AppCompatActivity {
 
 
         //////////////////////////// FIRST TRY AT SERVICE BUTTONS START ///////////////////////////////
-        btnStartLocationServiceX = findViewById(R.id.btnStartLocService);
-        btnStartLocationServiceX.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Log.i("Classes", "Start location service button click");
-
-                startService(new Intent(HomePage.this,  JClocationService.class));
-            }
-        });
-
-        btnStopLocationServiceX = findViewById(R.id.btnStopLocService);
-        btnStopLocationServiceX.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                stopService(new Intent(HomePage.this, JClocationService.class));
-
-            }
-        });
+//        btnStartLocationServiceX = findViewById(R.id.btnStartLocService);
+//        btnStartLocationServiceX.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Log.i("Classes", "Start location service button click");
+//
+//                startService(new Intent(HomePage.this,  JClocationService.class));
+//            }
+//        });
+//
+//        btnStopLocationServiceX = findViewById(R.id.btnStopLocService);
+//        btnStopLocationServiceX.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                stopService(new Intent(HomePage.this, JClocationService.class));
+//
+//            }
+//        });
 
         //////////////////////////// FIRST TRY AT SERVICE BUTTONS End ///////////////////////////////
 
@@ -213,14 +241,72 @@ public class HomePage extends AppCompatActivity {
 
                 if (ContextCompat.checkSelfPermission(getApplicationContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(HomePage.this,
-                            new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                            REQUEST_CODE_LOCATION_PERMISSION);
+                    /////////////////////////////////Dialog Start////////////////////////////////////////////////
+                    LayoutInflater inflater = LayoutInflater.from(HomePage.this);
+                    View viewDial = inflater.inflate(R.layout.xxx_dialog_hp_permissions, null);
 
-                   // Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    dialog = new androidx.appcompat.app.AlertDialog.Builder(HomePage.this)
+                            .setView(viewDial)
+                            .create();
+
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    dialog.show();
+                    double dialogWidth = width2 * .75;
+                    int dialogWidthFinal = (int) Math.round(dialogWidth);
+                    double dialogHeight = dialogWidthFinal * 1.5;
+                    int dialogHeightFinal = (int) Math.round(dialogHeight);
+
+                    dialog.getWindow().setLayout(dialogWidthFinal, dialogHeightFinal);
 
 
-                    Log.i("LocNewApproach", "needs to ask for permission");
+                    btnOKX = viewDial.findViewById(R.id.btnOK);
+                    btnNoX = viewDial.findViewById(R.id.btnNo);
+
+                    if (width2 > 1500) { // changes in fot for tablet and then small format phone
+
+
+                    } else if (height2 < 1300) {
+
+                        btnOKX.setTextSize(8);
+
+                    }
+
+
+                    btnOKX.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            ActivityCompat.requestPermissions(HomePage.this,
+                                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                                    REQUEST_CODE_LOCATION_PERMISSION);
+
+                            // Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+
+
+                            Log.i("LocNewApproach", "needs to ask for permission");
+
+                            //userReference.child("ratingasktoggle").setValue("maybe");
+                            dialog.dismiss();
+                        }
+                    });
+
+                    btnNoX.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            // need some sort of action here
+                            dialog.dismiss();
+
+                        }
+                    });
+
+
+
+
+
+                ////////////////////////////////Dialog End///////////////////////////////////////////////////
+
 
                 } else {
 
@@ -419,7 +505,10 @@ public class HomePage extends AppCompatActivity {
 
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.i("LocNewApproach", "in pm version if + pm: " +pm.toString());
+            Log.i("LocNewApproach", "pm ignoring: " +pm.isIgnoringBatteryOptimizations(getPackageName()));
             if (pm != null && !pm.isIgnoringBatteryOptimizations(getPackageName())) {
+                Log.i("LocNewApproach", "in pm non-null if");
                 askIgnoreOptimization();
             }
 
@@ -801,6 +890,9 @@ public class HomePage extends AppCompatActivity {
 
     }
     private void askIgnoreOptimization() {
+
+        Log.i("LocNewApproach", "in askignorebat");
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
