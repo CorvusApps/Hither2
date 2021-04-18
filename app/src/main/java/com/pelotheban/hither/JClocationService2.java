@@ -68,46 +68,6 @@ public class JClocationService2 extends Service {
 
         Log.i("LocNewApproach", "in startLocationService");
 
-//        String channelID = "location_notification_channel";
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        Intent resultIntent = new Intent();
-//        PendingIntent pendingIntent = PendingIntent.getActivity(
-//                getApplicationContext(),
-//                0,
-//                resultIntent,
-//                PendingIntent.FLAG_UPDATE_CURRENT
-//        );
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-//                getApplicationContext(),
-//                channelID
-//        );
-//        builder.setSmallIcon(R.mipmap.ic_launcher);
-//        builder.setContentTitle("Location Service");
-//        builder.setDefaults(NotificationCompat.DEFAULT_ALL);
-//        builder.setContentText("Running");
-//        builder.setContentIntent(pendingIntent);
-//        builder.setAutoCancel(false);
-//        builder.setPriority(NotificationCompat.PRIORITY_MAX);
-//
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//
-//            if(notificationManager != null && notificationManager.getNotificationChannel(channelID) == null){
-//                NotificationChannel notificationChannel = new NotificationChannel(
-//                        channelID,
-//                        "Location Service",
-//                        NotificationManager.IMPORTANCE_HIGH
-//
-//                );
-//                notificationChannel.setDescription("This channel is used by location service");
-//                notificationManager.createNotificationChannel(notificationChannel);
-//            } else {
-//
-//
-//            }
-
-//        }
-
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(4000);
         locationRequest.setFastestInterval(2000);
