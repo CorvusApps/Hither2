@@ -96,6 +96,7 @@ public class HomePage extends AppCompatActivity {
     //Permission dialog
 
     private Button btnOKX, btnNoX;
+    private TextView txtPermMessagaX;
     private int height2;
     private int width2;
     private AlertDialog dialog;
@@ -166,6 +167,8 @@ public class HomePage extends AppCompatActivity {
 
                 if (ContextCompat.checkSelfPermission(getApplicationContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i("LocNewApproach", "needs to ask for permission original");
                     /////////////////////////////////Dialog Start////////////////////////////////////////////////
                     LayoutInflater inflater = LayoutInflater.from(HomePage.this);
                     View viewDial = inflater.inflate(R.layout.xxx_dialog_hp_permissions, null);
@@ -184,7 +187,7 @@ public class HomePage extends AppCompatActivity {
 
                     dialog.getWindow().setLayout(dialogWidthFinal, dialogHeightFinal);
 
-
+                    txtPermMessagaX = viewDial.findViewById(R.id.txtPermMessage);
                     btnOKX = viewDial.findViewById(R.id.btnOK);
                     btnNoX = viewDial.findViewById(R.id.btnNo);
 
@@ -206,12 +209,8 @@ public class HomePage extends AppCompatActivity {
                                     new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                                     REQUEST_CODE_LOCATION_PERMISSION);
 
-                            // Manifest.permission.ACCESS_BACKGROUND_LOCATION,
 
-
-                            Log.i("LocNewApproach", "needs to ask for permission");
-
-                            //userReference.child("ratingasktoggle").setValue("maybe");
+                            Log.i("LocNewApproach", "Requesting permission");
                             dialog.dismiss();
                         }
                     });
@@ -220,7 +219,9 @@ public class HomePage extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
 
-                            // need some sort of action here
+                            Log.i("LocNewApproach", "Refusing to ask for permission");
+
+                            txtPermMessagaX.setText("you really need to allow shit or it won't work you idiot");
                             dialog.dismiss();
 
                         }
@@ -354,6 +355,8 @@ public class HomePage extends AppCompatActivity {
             activityManager.getRunningServices(Integer.MAX_VALUE)){
                 if(JClocationService2.class.getName().equals(service.service.getClassName())) {
                     if(service.foreground){
+
+                        Log.i("LocNewApproach", "isLocationServiceRunning returns true");
                         return true;
                     }
                 }
@@ -540,7 +543,7 @@ public class HomePage extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-
+        Log.i("LocNewApproach", "in on reqeuest permissions result");
 
         if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length >0) {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -551,7 +554,63 @@ public class HomePage extends AppCompatActivity {
             } else {
 
                 // need a dialog to tell them to do this
-                Log.i("LocNewApproach", "manual permission ont granted");
+                Log.i("LocNewApproach", "manual permission not granted");
+
+                LayoutInflater inflater = LayoutInflater.from(HomePage.this);
+                View viewDial = inflater.inflate(R.layout.xxx_dialog_hp_permissions, null);
+
+                dialog = new androidx.appcompat.app.AlertDialog.Builder(HomePage.this)
+                        .setView(viewDial)
+                        .create();
+
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                dialog.show();
+                double dialogWidth = width2 * .75;
+                int dialogWidthFinal = (int) Math.round(dialogWidth);
+                double dialogHeight = dialogWidthFinal * 1.5;
+                int dialogHeightFinal = (int) Math.round(dialogHeight);
+
+                dialog.getWindow().setLayout(dialogWidthFinal, dialogHeightFinal);
+
+                txtPermMessagaX = viewDial.findViewById(R.id.txtPermMessage);
+                btnOKX = viewDial.findViewById(R.id.btnOK);
+                btnNoX = viewDial.findViewById(R.id.btnNo);
+
+                if (width2 > 1500) { // changes in fot for tablet and then small format phone
+
+
+                } else if (height2 < 1300) {
+
+                    btnOKX.setTextSize(8);
+
+                }
+
+
+                btnOKX.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        ActivityCompat.requestPermissions(HomePage.this,
+                                new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                                REQUEST_CODE_LOCATION_PERMISSION);
+
+
+                        Log.i("LocNewApproach", "needs to ask for permission");
+                        dialog.dismiss();
+                    }
+                });
+
+                btnNoX.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        txtPermMessagaX.setText("you really need to allow shit or it won't work you idiot");
+                        dialog.dismiss();
+
+                    }
+                });
+
 
 
             }
