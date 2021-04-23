@@ -80,7 +80,7 @@ public class HomePage extends AppCompatActivity {
     private LocationRequest locationRequest; // this and callback needed for when location is null because no app generated a last location
     private LocationCallback locationCallback;
 
-    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1012;
     private static final int IGNORE_BATTERY_OPTIMIZATION_REQUEST = 1002;
 
     private DatabaseReference homePageRef, userHomePageRef;
@@ -205,12 +205,7 @@ public class HomePage extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
 
-                            ActivityCompat.requestPermissions(HomePage.this,
-                                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                                    REQUEST_CODE_LOCATION_PERMISSION);
-
-
-                            Log.i("LocNewApproach", "Requesting permission");
+                            requestPerms();
                             dialog.dismiss();
                         }
                     });
@@ -538,6 +533,29 @@ public class HomePage extends AppCompatActivity {
 
     }
 
+    private void requestPerms () {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(HomePage.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            ActivityCompat.requestPermissions(HomePage.this,
+                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_LOCATION_PERMISSION);
+            Log.i("LocNewApproach", "needs to ask for permission in should");
+
+        } else {
+
+            ActivityCompat.requestPermissions(HomePage.this,
+                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_LOCATION_PERMISSION);
+            Log.i("LocNewApproach", "needs to ask for permission in should else");
+
+
+
+        }
+
+
+    }
+
 
 
     @Override
@@ -591,13 +609,9 @@ public class HomePage extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        ActivityCompat.requestPermissions(HomePage.this,
-                                new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                                REQUEST_CODE_LOCATION_PERMISSION);
+                            requestPerms();
+                            dialog.dismiss();
 
-
-                        Log.i("LocNewApproach", "needs to ask for permission");
-                        dialog.dismiss();
                     }
                 });
 

@@ -30,6 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class JClocationService2 extends Service {
 
+    private String Hub1, Hub2, Hub3, Hub4, Hub5;
+    private double dHub1Lat, dHub1Lon, dHub2Lat, dHub2Lon, dHub3Lat, dHub3Lon, dHub4Lat,dHub4Lon, dHub5Lat, dHub5Lon;
+
     private LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(@NonNull LocationResult locationResult) {
