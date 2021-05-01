@@ -30,8 +30,11 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class JClocationService2 extends Service {
 
+    private double latitude, longitude;
+
     private String Hub1, Hub2, Hub3, Hub4, Hub5;
     private double dHub1Lat, dHub1Lon, dHub2Lat, dHub2Lon, dHub3Lat, dHub3Lon, dHub4Lat,dHub4Lon, dHub5Lat, dHub5Lon;
+    private double dHub1Dist, dHub2Dist, dHub3Dist, dHub4Dist, dHub5Dist;
 
     private LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -40,9 +43,10 @@ public class JClocationService2 extends Service {
 
             if (locationResult != null && locationResult.getLastLocation() != null){
 
-                double latitude = locationResult.getLastLocation().getLatitude();
-                double longitude = locationResult.getLastLocation().getLongitude();
+                latitude = locationResult.getLastLocation().getLatitude();
+                longitude = locationResult.getLastLocation().getLongitude();
                 Log.i("LocNewApproach", latitude +", " + longitude);
+                Log.i("LocNewApproach", JCconstants.consHub1);
 
                 DatabaseReference userJCLoc2Ref;
                 String userID;
@@ -105,6 +109,24 @@ public class JClocationService2 extends Service {
                 .removeLocationUpdates(locationCallback);
         stopForeground(true);
         stopSelf();
+
+    }
+
+    private void calculateDistance() {
+
+        Location startPoint=new Location("locationA");
+        startPoint.setLatitude(latitude);
+        startPoint.setLongitude(longitude);
+
+        Location endPoint=new Location("locationA");
+        endPoint.setLatitude(43.364605);
+        endPoint.setLongitude(-80.3127999);
+
+        double distance=startPoint.distanceTo(endPoint);
+
+        String distance2 = String.valueOf(distance);
+        //txtDistanceX.setText(distance2);
+
 
     }
 
