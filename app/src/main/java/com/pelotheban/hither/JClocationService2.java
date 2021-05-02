@@ -60,6 +60,8 @@ public class JClocationService2 extends Service {
                     userJCLoc2Ref.getRef().child("lastlocation").setValue(location);
                 }
 
+                calculateDistance();
+
             }
 
         }
@@ -125,6 +127,7 @@ public class JClocationService2 extends Service {
         double distance=startPoint.distanceTo(endPoint);
 
         String distance2 = String.valueOf(distance);
+        Log.i("LocNewApproach", "Distance: " + distance2);
         //txtDistanceX.setText(distance2);
 
 
