@@ -41,6 +41,7 @@ public class JClocationService2 extends Service {
         public void onLocationResult(@NonNull LocationResult locationResult) {
             super.onLocationResult(locationResult);
 
+
             if (locationResult != null && locationResult.getLastLocation() != null){
 
                 latitude = locationResult.getLastLocation().getLatitude();
