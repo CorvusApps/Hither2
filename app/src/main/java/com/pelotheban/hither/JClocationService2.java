@@ -117,19 +117,28 @@ public class JClocationService2 extends Service {
 
     private void calculateDistance() {
 
-        Location startPoint=new Location("locationA");
-        startPoint.setLatitude(latitude);
-        startPoint.setLongitude(longitude);
+        Location userPoint=new Location("locationA");
+        userPoint.setLatitude(latitude);
+        userPoint.setLongitude(longitude);
 
-        Location endPoint=new Location("locationA");
-        endPoint.setLatitude(43.364605);
-        endPoint.setLongitude(-80.3127999);
+        Location hub1Point=new Location("locationA");
+        hub1Point.setLatitude(dHub1Lat);
+        hub1Point.setLongitude(dHub1Lon);
 
-        double distance=startPoint.distanceTo(endPoint);
+        Location hub2Point=new Location("locationA");
+        hub1Point.setLatitude(dHub2Lat);
+        hub1Point.setLongitude(dHub2Lon);
 
-        String distance2 = String.valueOf(distance);
-        Log.i("LocNewApproach", "Distance: " + distance2);
+        dHub1Dist=userPoint.distanceTo(hub1Point);
+        dHub2Dist=userPoint.distanceTo(hub2Point);
+
+        //String distance2 = String.valueOf(distance);
+        Log.i("LocNewApproach", "Distance: " + dHub1Dist);
+        Log.i("LocNewApproach", "Distance: " + dHub2Dist);
         //txtDistanceX.setText(distance2);
+
+        // hubs
+        // create location
 
 
     }

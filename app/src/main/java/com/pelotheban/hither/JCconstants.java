@@ -6,6 +6,7 @@ class JCconstants {
     static final String ACTION_START_LOCATION_SERVICE = "startLocationService";
     static final String ACTION_STOP_LOCATION_SERVICE = "stopLocationService";
 
+    // need to get this to FB once validated methodoloby so can change and add hubs dynamically without need to update app
     static final String consHub1 = "Toronto";
     static final String consHub2 = "Cambridge";
     static final String consHub3 = "Waterloo";
