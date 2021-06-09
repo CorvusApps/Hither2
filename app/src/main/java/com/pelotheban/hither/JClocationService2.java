@@ -32,8 +32,8 @@ public class JClocationService2 extends Service {
 
     private double latitude, longitude;
 
-    private String Hub1, Hub2, Hub3, Hub4, Hub5;
-    private double dHub1Lat, dHub1Lon, dHub2Lat, dHub2Lon, dHub3Lat, dHub3Lon, dHub4Lat,dHub4Lon, dHub5Lat, dHub5Lon;
+    static String closestHub;
+
     private double dHub1Dist, dHub2Dist, dHub3Dist, dHub4Dist, dHub5Dist;
 
     private LocationCallback locationCallback = new LocationCallback() {
@@ -47,7 +47,7 @@ public class JClocationService2 extends Service {
                 latitude = locationResult.getLastLocation().getLatitude();
                 longitude = locationResult.getLastLocation().getLongitude();
                 Log.i("LocNewApproach", latitude +", " + longitude);
-                Log.i("LocNewApproach", JCconstants.consHub1);
+
 
                 DatabaseReference userJCLoc2Ref;
                 String userID;
@@ -121,20 +121,44 @@ public class JClocationService2 extends Service {
         userPoint.setLatitude(latitude);
         userPoint.setLongitude(longitude);
 
-        Location hub1Point=new Location("locationA");
-        hub1Point.setLatitude(dHub1Lat);
-        hub1Point.setLongitude(dHub1Lon);
+        Location hub1Point=new Location("locationB");
+//        hub1Point.setLatitude(JCconstants.consHub1_Lat);
+//        hub1Point.setLongitude(JCconstants.consHub1_Long);
 
-        Location hub2Point=new Location("locationA");
-        hub1Point.setLatitude(dHub2Lat);
-        hub1Point.setLongitude(dHub2Lon);
+        hub1Point.setLatitude(43.6532);
+        hub1Point.setLongitude(-79.3832);
+
+        Location hub2Point=new Location("locationC");
+        hub2Point.setLatitude(JCconstants.consHub2_Lat);
+        hub2Point.setLongitude(JCconstants.consHub2_Long);
+
+        Log.i("LocNewApproach","Lat Hub 1 " + JCconstants.consHub1_Lat);
+        Log.i("LocNewApproach","Long Hub 1 " + JCconstants.consHub1_Long);
+
+        Log.i("LocNewApproach","Lat Hub 2 " + JCconstants.consHub2_Lat);
+        Log.i("LocNewApproach","Long Hub 2 " + JCconstants.consHub2_Long);
+
+
 
         dHub1Dist=userPoint.distanceTo(hub1Point);
         dHub2Dist=userPoint.distanceTo(hub2Point);
 
+        //need to convert this to some sort of array selector but for not just testing if can get the hub to transfer to HP an work with recycler view
+        if (dHub1Dist > dHub2Dist){
+
+            closestHub = JCconstants.consHub2;
+
+        }
+        if (dHub2Dist > dHub1Dist){
+
+            closestHub = JCconstants.consHub1;
+
+        }
+
         //String distance2 = String.valueOf(distance);
-        Log.i("LocNewApproach", "Distance: " + dHub1Dist);
-        Log.i("LocNewApproach", "Distance: " + dHub2Dist);
+        Log.i("LocNewApproach","Closest Hub " + closestHub);
+        Log.i("LocNewApproach", "DistanceHub1: " + dHub1Dist);
+        Log.i("LocNewApproach", "DistanceHub2: " + dHub2Dist);
         //txtDistanceX.setText(distance2);
 
         // hubs

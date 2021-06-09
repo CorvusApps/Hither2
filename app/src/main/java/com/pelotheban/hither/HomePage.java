@@ -104,6 +104,8 @@ public class HomePage extends AppCompatActivity {
 
     // recycler view elements
 
+    String hpClosestHub;
+
     private RecyclerView rcvProfilesX;
     int cardToggle;
     private LinearLayoutManager layoutManager;
@@ -141,6 +143,7 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+        hpClosestHub = "None";
 
 
         //////////////////// FIREBASE BASICS /////////////////////////////////////
@@ -383,6 +386,9 @@ public class HomePage extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), JClocationService2.class);
             intent.setAction(JCconstants.ACTION_START_LOCATION_SERVICE);
             startService(intent);
+
+            hpClosestHub = JClocationService2.closestHub;
+            Log.i("LocNewApproach", "hpClosestHub: " + hpClosestHub);
         }
     }
 
