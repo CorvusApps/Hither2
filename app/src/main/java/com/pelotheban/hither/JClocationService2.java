@@ -28,6 +28,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.OptionalDouble;
+import java.util.stream.DoubleStream;
+
 public class JClocationService2 extends Service {
 
     private double latitude, longitude;
@@ -122,15 +125,24 @@ public class JClocationService2 extends Service {
         userPoint.setLongitude(longitude);
 
         Location hub1Point=new Location("locationB");
-//        hub1Point.setLatitude(JCconstants.consHub1_Lat);
-//        hub1Point.setLongitude(JCconstants.consHub1_Long);
-
-        hub1Point.setLatitude(43.6532);
-        hub1Point.setLongitude(-79.3832);
+        hub1Point.setLatitude(JCconstants.consHub1_Lat);
+        hub1Point.setLongitude(JCconstants.consHub1_Long);
 
         Location hub2Point=new Location("locationC");
         hub2Point.setLatitude(JCconstants.consHub2_Lat);
         hub2Point.setLongitude(JCconstants.consHub2_Long);
+
+        Location hub3Point=new Location("locationD");
+        hub3Point.setLatitude(JCconstants.consHub3_Lat);
+        hub3Point.setLongitude(JCconstants.consHub3_Long);
+
+        Location hub4Point=new Location("locationE");
+        hub4Point.setLatitude(JCconstants.consHub4_Lat);
+        hub4Point.setLongitude(JCconstants.consHub4_Long);
+
+        Location hub5Point=new Location("locationF");
+        hub5Point.setLatitude(JCconstants.consHub5_Lat);
+        hub5Point.setLongitude(JCconstants.consHub5_Long);
 
         Log.i("LocNewApproach","Lat Hub 1 " + JCconstants.consHub1_Lat);
         Log.i("LocNewApproach","Long Hub 1 " + JCconstants.consHub1_Long);
@@ -138,20 +150,46 @@ public class JClocationService2 extends Service {
         Log.i("LocNewApproach","Lat Hub 2 " + JCconstants.consHub2_Lat);
         Log.i("LocNewApproach","Long Hub 2 " + JCconstants.consHub2_Long);
 
+        Log.i("LocNewApproach","Lat Hub 5 " + JCconstants.consHub5_Lat);
+        Log.i("LocNewApproach","Long Hub 5 " + JCconstants.consHub5_Long);
 
 
         dHub1Dist=userPoint.distanceTo(hub1Point);
         dHub2Dist=userPoint.distanceTo(hub2Point);
+        dHub3Dist=userPoint.distanceTo(hub3Point);
+        dHub4Dist=userPoint.distanceTo(hub4Point);
+        dHub5Dist=userPoint.distanceTo(hub5Point);
+
+        OptionalDouble shortestDist = DoubleStream.of(dHub1Dist, dHub2Dist).min();
+
+        double shortestDistB = shortestDist.orElseThrow(IllegalAccessError::new);
+
 
         //need to convert this to some sort of array selector but for not just testing if can get the hub to transfer to HP an work with recycler view
-        if (dHub1Dist > dHub2Dist){
+        if (shortestDistB == dHub1Dist){
+
+            closestHub = JCconstants.consHub1;
+
+        }
+        if (shortestDistB == dHub2Dist){
 
             closestHub = JCconstants.consHub2;
 
         }
-        if (dHub2Dist > dHub1Dist){
 
-            closestHub = JCconstants.consHub1;
+        if (shortestDistB == dHub3Dist){
+
+            closestHub = JCconstants.consHub3;
+
+        }
+        if (shortestDistB == dHub4Dist){
+
+            closestHub = JCconstants.consHub4;
+
+        }
+        if (shortestDistB == dHub5Dist){
+
+            closestHub = JCconstants.consHub5;
 
         }
 
@@ -159,6 +197,10 @@ public class JClocationService2 extends Service {
         Log.i("LocNewApproach","Closest Hub " + closestHub);
         Log.i("LocNewApproach", "DistanceHub1: " + dHub1Dist);
         Log.i("LocNewApproach", "DistanceHub2: " + dHub2Dist);
+        Log.i("LocNewApproach", "DistanceHub3: " + dHub3Dist);
+        Log.i("LocNewApproach", "DistanceHub4: " + dHub4Dist);
+        Log.i("LocNewApproach", "DistanceHub5: " + dHub5Dist);
+
         //txtDistanceX.setText(distance2);
 
         // hubs
